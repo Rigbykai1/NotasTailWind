@@ -1,5 +1,5 @@
 import { useState } from "react";
-import noteService from "../Services/notes.services";
+import noteService from "../Services/note.services";
 import ImportantButton from "../Pages/Notes/ImportantButton";
 
 const EditModal = ({ note, modalOpen, closeModal, onUpdateNote }) => {

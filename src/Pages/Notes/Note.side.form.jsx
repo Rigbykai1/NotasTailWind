@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ImportantButton from "./ImportantButton";
-import noteService from "../../Services/notes.services";
+import noteService from "../../Services/note.services";
 import { v4 as uuidv4 } from "uuid";
 
 const NoteSideForm = ({ notesUpdateOndAdd }) => {

@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "start": "npm run dev -- --host",
     "Add to branch": "git add *",
-    "Do commit update":"git commit -m 'Update'",
-    "Upload commit":"git push"
+    "Do commit update": "git commit -m 'Update'",
+    "Upload commit": "git push"
   },
   "dependencies": {
     "axios": "^1.5.0",

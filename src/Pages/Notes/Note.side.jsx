@@ -1,7 +1,7 @@
 import NoteFilter from "./Note.filter";
 import NoteCard from "./Note.card";
 import { useState, useEffect } from "react";
-import noteService from "../../Services/notes.services";
+import noteService from "../../Services/note.services";
 import NoteSideForm from "./Note.side.form";
 import { AnimatePresence } from "framer-motion";
 
@@ -80,7 +80,6 @@ const NoteSide = () => {
   }, []);
 
   const notesToShow = showAll ? notes : filterNotes;
-
   return (
     <div>
       <div className="flex justify-between py-3">
