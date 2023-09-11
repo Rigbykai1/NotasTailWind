@@ -20,7 +20,8 @@ const Hero = () => {
             lugar.
           </p>
 
-          <button className="btn btn-primary">Get Started</button>
+          <a className="btn btn-primary" href="/Notes">Get Started</a>
+       
         </div>
       </div>
     </div>
