@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ImportantButton from "./ImportantButton";
 import noteService from "../../Services/note.services";
-import { v4 as uuidv4 } from "uuid";
 
 const NoteSideForm = ({ notesUpdateOndAdd }) => {
   const [noteImportant, setNoteImportant] = useState(false);
@@ -12,13 +11,9 @@ const NoteSideForm = ({ notesUpdateOndAdd }) => {
     event.preventDefault();
     const isContentEmpty = newNote.length === 0;
     const isTitleEmpty = newTitle.length === 0;
-    const currentDate = new Date();
     const noteObject = {
-      id: uuidv4(),
       title: isTitleEmpty ? "sin titulo" : newTitle,
       content: isContentEmpty ? "Sin contenido" : newNote,
-      createdAt: currentDate.toISOString(),
-      modified: currentDate.toISOString(),
       important: noteImportant,
       isDone: false,
     };

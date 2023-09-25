@@ -7,11 +7,12 @@ import {
   MdNotificationImportant,
 } from "react-icons/md";
 
+import dateConverter from "../../Services/dates.changer";
+
 import EditModal from "../../Components/Edit.Modal";
 import { motion } from "framer-motion";
-import { dateConverter } from "../../Services/dates.changer";
 
-const NoteCard = ({ note, onDelete, index }) => {
+const NoteCard = ({ note, onDelete }) => {
   const [newNote, setNewNote] = useState(note);
   const [showContent, setShowContent] = useState(false);
 
@@ -57,7 +58,7 @@ const NoteCard = ({ note, onDelete, index }) => {
               </button>
             </div>
             <div
-              className="max-w-[150px] py-2 cursor-pointer"
+              className="max-w-[110px] py-2 cursor-pointer"
               onClick={handleContent}
             >
               <h1

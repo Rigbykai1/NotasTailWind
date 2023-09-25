@@ -2,6 +2,7 @@ import { useState } from "react";
 import noteService from "../Services/note.services";
 import ImportantButton from "../Pages/Notes/ImportantButton";
 
+
 const EditModal = ({ note, modalOpen, closeModal, onUpdateNote }) => {
   const [newTitle, setNewTitle] = useState(note.title);
   const [newContent, setNewContent] = useState(note.content);
@@ -17,14 +18,12 @@ const EditModal = ({ note, modalOpen, closeModal, onUpdateNote }) => {
   const handleFormSubmit = () => {
     const isContentEmpty = note.length === 0;
     const isTitleEmpty = note.length === 0;
-    const currentDate = new Date();
+    const currentDate = new Date().toISOString();
     const noteData = {
-      id: note.id,
-      title: newTitle,
-      content: newContent,
+      title: isTitleEmpty ? "sin titulo" : newTitle,
+      content: isContentEmpty ? "Sin contenido" : newContent,
+      modified: currentDate,
       important: noteImportant,
-      isDone: note.isDone,
-      modified: currentDate.toISOString(),
     };
 
     if (isContentEmpty && isTitleEmpty) {

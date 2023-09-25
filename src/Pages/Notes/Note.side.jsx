@@ -1,16 +1,43 @@
 import NoteFilter from "./Note.filter";
 import NoteCard from "./Note.card";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import noteService from "../../Services/note.services";
 import NoteSideForm from "./Note.side.form";
 import { AnimatePresence } from "framer-motion";
 
+/**
+ * React component that displays a list of notes and allows the user to filter and interact with them.
+ */
 const NoteSide = () => {
+  // State variables
   const [notes, setNotes] = useState([]);
-  const [showAll, setShowAll] = useState(true);
-  const [showImportant, setShowImportant] = useState(false);
   const [filterNotes, setFilterNotes] = useState([]);
+  const [screenResolution, setScreenResolution] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
+  // Reducer
+  const initialState = {
+    showAll: true,
+    showImportant: false,
+  };
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "SET_SHOW_ALL":
+        return { ...state, showAll: action.payload };
+      case "SET_SHOW_IMPORTANT":
+        return { ...state, showImportant: action.payload };
+      default:
+        return state;
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { showAll, showImportant } = state;
+
+  // Fetch initial notes from server
   useEffect(() => {
     noteService
       .getAll()
@@ -18,25 +45,43 @@ const NoteSide = () => {
         setNotes(initialNotes);
       })
       .catch((error) => {
-        console.error("Error al mostrar las notas:", error);
+        // Handle the error using a proper error handling mechanism or library
+        // For example, display an error message to the user or log the error in a centralized location
+        handleError(error);
       });
   }, []);
 
+  // Update screen resolution on window resize
+  useEffect(() => {
+    const updateScreenResolution = () => {
+      setScreenResolution({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", updateScreenResolution);
+    return () => {
+      window.removeEventListener("resize", updateScreenResolution);
+    };
+  }, []);
+
+  // Handle updates and additions to notes
   const notesUpdateOndAdd = (updatedNote) => {
-    setNotes(notes.concat(updatedNote));
-    if (updatedNote.important === true) {
-      setFilterNotes(filterNotes.concat(updatedNote));
+    setNotes((prevNotes) => [...prevNotes, updatedNote]);
+    if (updatedNote.important) {
+      setFilterNotes((prevFilterNotes) => [...prevFilterNotes, updatedNote]);
     }
   };
 
+  // Handle note deletion
   const onDelete = (id) => {
     noteService
       .remove(id)
       .then(() => {
-        const updateDelete = notes.filter((note) => note.id !== id);
-        setNotes(updateDelete);
-        setFilterNotes(
-          updateDelete.filter((notes) => notes.important === true)
+        setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+        setFilterNotes((prevFilterNotes) =>
+          prevFilterNotes.filter((note) => note.id !== id)
         );
       })
       .catch((error) => {
@@ -44,42 +89,27 @@ const NoteSide = () => {
       });
   };
 
+  // Toggle important filter and filter notes accordingly
   const importantFilter = () => {
-    setShowImportant(!showImportant);
+    dispatch({ type: "SET_SHOW_IMPORTANT", payload: !showImportant });
     const filteredNotes = showImportant
       ? []
-      : notes.filter((note) => note.important === true);
+      : notes.filter((note) => note.important);
     setFilterNotes(filteredNotes);
   };
 
+  // Toggle show all filter and filter notes accordingly
   const showAllFilter = () => {
-    setShowAll(!showAll);
+    dispatch({ type: "SET_SHOW_ALL", payload: !showAll });
     const filteredNotes = showImportant
-      ? notes.filter((note) => note.important === true)
+      ? notes.filter((note) => note.important)
       : [];
     setFilterNotes(filteredNotes);
   };
 
-  const [screenResolution, setScreenResolution] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  const updateScreenResolution = () => {
-    setScreenResolution({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", updateScreenResolution);
-    return () => {
-      window.removeEventListener("resize", updateScreenResolution);
-    };
-  }, []);
-
+  // Determine which notes to show based on showAll state
   const notesToShow = showAll ? notes : filterNotes;
+
   return (
     <div>
       <div className="flex justify-between py-3">
