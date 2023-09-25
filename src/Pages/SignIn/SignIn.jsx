@@ -1,34 +1,35 @@
 import React, { useState } from "react";
 import loginService from "../../Services/login.services";
 
-const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleFormSubmit = () => {
     const isEmailtEmpty = email.length === 0;
     const isPasswordEmpty = password.length === 0;
     const currentDate = new Date().toISOString();
     const newUser = {
-      title: isTitleEmpty ? "sin titulo" : newTitle,
-      content: isContentEmpty ? "Sin contenido" : newContent,
-      modified: currentDate,
-      important: noteImportant,
+      email: email,
+      username: userName,
+      createdAt: currentDate,
+      password: password,
+      notes: [],
     };
 
     if (isEmailtEmpty && isPasswordEmpty) {
       null;
     } else {
       loginService
-        .update(note.id, newUser)
-        .then((returnedNote) => {
-          onUpdateNote(returnedNote);
-          setNewContent(returnedNote.content);
-          setNewTitle(returnedNote.title);
-          setNoteImportant(returnedNote.important);
+        .create(newUser)
+        .then(() => {
+          setEmail("");
+          setUserName("");
+          setPassword("");
         })
         .catch((error) => {
-          console.error("Error al editar la nota:", error);
+          console.error("Error al agregar usuario:", error);
         });
     }
   };
@@ -36,6 +37,11 @@ const Login = () => {
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
+
+  const handleUsername = (event) => {
+    setUserName(event.target.value);
+  };
+
   const handlePassword = (event) => {
     setPassword(event.target.value);
   };
@@ -45,21 +51,21 @@ const Login = () => {
       className="hero min-h-screen bg-base-200"
       style={{
         backgroundImage:
-          "url(https://images.pexels.com/photos/807598/pexels-photo-807598.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)",
+          "url(https://images.unsplash.com/photo-1479502806991-251c94be6b15?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80)",
       }}
     >
       <div className="hero-overlay bg-opacity-60"></div>
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left max-w-md">
-          <h1 className="text-5xl font-bold">Login now!</h1>
+          <h1 className="text-5xl font-bold">Sign In!</h1>
           <p className="py-6">
-            Tener una cuenta es esencial para poder guardar tus notas, ya que es
-            una aplicación web.
+            Nosotros no utilizaremos los datos para comerciar con ellos, tus
+            datos están seguros en nuestros servidores.
           </p>
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <div className="card-body">
-            <div className="form-control" onSubmit={handleFormSubmit}>
+            <form className="form-control" onSubmit={handleFormSubmit}>
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
@@ -72,15 +78,28 @@ const Login = () => {
               />
 
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">Username</span>
               </label>
               <input
                 type="text"
+                placeholder="username"
+                className="input input-bordered"
+                value={userName}
+                onChange={handleUsername}
+              />
+
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+
+              <input
+                type="password"
                 placeholder="password"
                 className="input input-bordered"
                 value={password}
                 onChange={handlePassword}
               />
+
               <label className="label py-4">
                 <a href="/SignIn" className="label-text-alt link link-hover">
                   Register
@@ -90,9 +109,9 @@ const Login = () => {
                 </a>
               </label>
               <button className="btn btn-primary" type="submit">
-                Login
+                Sign in
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -100,4 +119,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;
